@@ -1,3 +1,5 @@
+package Logica;
+
 public class IA extends Usuario implements Juego{
     private int eleccionRandom;
 

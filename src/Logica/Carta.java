@@ -1,3 +1,5 @@
+package Logica;
+
 public class Carta {
     private String tipo;
 
