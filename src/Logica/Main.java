@@ -1,3 +1,5 @@
+import Visual.Pantalla;
+
 import java.sql.SQLOutput;
 import java.util.Scanner;
 
@@ -6,6 +8,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
+        Pantalla pantalla = new Pantalla();
+        pantalla.setVisible(true);
+        pantalla.setSize(300,300);
 
         // INICIO AL USUARIO
         Usuario player = new Usuario();
