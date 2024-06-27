@@ -2,7 +2,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-public class Usuario implements Juego{
+public class Usuario extends Thread implements Juego {
     private int estrellas;
     // private int eleccionJuego; // Se cambiara en lo que descubra como hacer que elijan de alguna manera por api
     private String apodo;
@@ -48,12 +48,32 @@ public class Usuario implements Juego{
     public void verificar(Usuario ia, int desicionPlayer, int desicionIA){
         if(ia.cartas.get(desicionIA).getTipo().equals(this.cartas.get(desicionPlayer).getTipo())){
             System.out.println("Se empato");
-        }else if(ia.cartas.get(desicionIA).getTipo().equals("Piedra") || this.cartas.get(desicionPlayer).getTipo().equals("Piedra")){
+        }else if(this.cartas.get(desicionPlayer).getTipo().equals("Piedra")){
             if(ia.cartas.get(desicionIA).getTipo().equals("Papel")){
                 this.setEstrellas(this.getEstrellas()-1);
                 ia.setEstrellas(ia.getEstrellas()+1);
                 System.out.println("Perdiste");
-            }else if(this.cartas.get(desicionPlayer).getTipo().equals("Papel")){
+            }else{
+                System.out.println("Ganaste");
+                this.setEstrellas(this.getEstrellas()+1);
+                ia.setEstrellas(ia.getEstrellas()-1);
+            }
+        }else if(this.cartas.get(desicionPlayer).getTipo().equals("Papel")){
+            if(ia.cartas.get(desicionIA).getTipo().equals("Tijera")){
+                this.setEstrellas(this.getEstrellas()-1);
+                ia.setEstrellas(ia.getEstrellas()+1);
+                System.out.println("Perdiste");
+            }else{
+                System.out.println("Ganaste");
+                this.setEstrellas(this.getEstrellas()+1);
+                ia.setEstrellas(ia.getEstrellas()-1);
+            }
+        }else if(this.cartas.get(desicionPlayer).getTipo().equals("Tijera")){
+            if(ia.cartas.get(desicionIA).getTipo().equals("Piedra")){
+                this.setEstrellas(this.getEstrellas()-1);
+                ia.setEstrellas(ia.getEstrellas()+1);
+                System.out.println("Perdiste");
+            }else{
                 System.out.println("Ganaste");
                 this.setEstrellas(this.getEstrellas()+1);
                 ia.setEstrellas(ia.getEstrellas()-1);
@@ -72,19 +92,18 @@ public class Usuario implements Juego{
         // agrego desicion
         int desicion = scan.nextInt();
         //Implementar interfaz visual y no consola
-        do{
-            if(desicion > this.cartas.size() || desicion < this.cartas.size()){
+        while(desicion > this.cartas.size() || desicion < 0){
+            if(desicion > this.cartas.size() || desicion < 0){
                 System.out.println("Elija una carta valida");
                 for(int i = 0 ; i < this.cartas.size() ; i++){
                     System.out.println(i+")"+this.cartas.get(i).getTipo());
                 }
             }
             System.out.println("Que carta vas a utilizar");
-            juego(desicion, ia);
-            this.cartas.remove(desicion);
-        }while(desicion > this.cartas.size() && desicion < this.cartas.size());
+            desicion = scan.nextInt();
+        }
+        juego(desicion, ia);
     }
-
 
     @Override
     public void juego(int desicion, Usuario ia){
@@ -93,9 +112,11 @@ public class Usuario implements Juego{
         // implementar win/loose
         System.out.println("El jugador ("+this.apodo+") eligio "+this.cartas.get(desicion).getTipo()+"\nLa ia eligio "+ ia.cartas.get(eleccionIA).getTipo());
         verificar(ia, desicion, eleccionIA);
-
         //
+        this.cartas.remove(desicion);
+
         ia.cartas.remove(eleccionIA);
+
     }
 
     @Override
@@ -110,4 +131,9 @@ public class Usuario implements Juego{
     }
 
 
+    // multithreating, para las ia's
+
+    public void run(int desicion, Usuario ia){
+        juego(desicion, ia);
+    }
 }
